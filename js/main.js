@@ -44,7 +44,7 @@ let app = new Vue({
         },
         sale(){
             if (onSale){
-                return this.brand + ' ' + this.product;
+
             }
         }
     }
