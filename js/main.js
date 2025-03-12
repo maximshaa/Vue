@@ -43,7 +43,7 @@ let app = new Vue({
             return this.variants[this.selectedVariant].variantQuantity;
         },
         sale(){
-            if (onSale){
+            if (onSal){
 
             }
         }
