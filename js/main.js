@@ -18,7 +18,9 @@ Vue.component('product', {
            <ul>
                <li v-for="detail in details">{{ detail }}</li>
            </ul>
+           
           <p>Shipping: {{ shipping }}</p>
+          
            <div
                    class="color-box"
                    v-for="(variant, index) in variants"
@@ -26,7 +28,7 @@ Vue.component('product', {
                    :style="{ backgroundColor:variant.variantColor }"
                    @mouseover="updateProduct(index)"
            ></div>
-                
+          
 
            <button
                    v-on:click="addToCart"
@@ -57,20 +59,22 @@ Vue.component('product', {
                     variantId: 2235,
                     variantColor: 'blue',
                     variantImage: "./assets/vmSocks-blue-onWhite.jpg",
-                    variantQuantity: 0
+                    variantQuantity: 30
                 }
             ],
-            cart: 0
+
         }
     },
     methods: {
         addToCart() {
-            this.$emit('add-to-cart');
+            this.$emit('add-to-cart',
+            this.variants[this.selectedVariant].variantId);
         },
         updateProduct(index) {
             this.selectedVariant = index;
             console.log(index);
-        }
+        },
+
     },
     computed: {
         title() {
@@ -95,6 +99,14 @@ let app = new Vue({
     el: '#app',
     data: {
         premium: true,
-        cart: 0
+        cart: [],
+    },
+    methods: {
+        updateCart(id) {
+            this.cart.push(id);
+        },
+        removeFromCart(id) {
+            this.cart = this.cart.filter(item => item !== id);
+        }
     }
 })
