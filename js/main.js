@@ -18,9 +18,7 @@ Vue.component('product', {
            <ul>
                <li v-for="detail in details">{{ detail }}</li>
            </ul>
-           
           <p>Shipping: {{ shipping }}</p>
-          
            <div
                    class="color-box"
                    v-for="(variant, index) in variants"
@@ -29,7 +27,6 @@ Vue.component('product', {
                    @mouseover="updateProduct(index)"
            ></div>
           
-
            <button
                    v-on:click="addToCart"
                    :disabled="!inStock"
@@ -38,13 +35,47 @@ Vue.component('product', {
                Add to cart
            </button>
            
-           <button
-                   v-on:click="removeToCart"
-                   :disabled="!inStock"
-                   :class="{ disabledButton: !inStock }"
-           >
-               Remove from cart
-           </button>
+           <div>
+<h2>Reviews</h2>
+<p v-if="!reviews.length">There are no reviews yet.</p>
+<ul>
+  <li v-for="review in reviews">
+  <p>{{ review.name }}</p>
+  <p>Rating: {{ review.rating }}</p>
+  <p>{{ review.review }}</p>
+  </li>
+</ul>
+</div>
+
+           
+           <form class="review-form" @submit.prevent="onSubmit">
+ <p>
+   <label for="name">Name:</label>
+   <input id="name" v-model="name" placeholder="name">
+ </p>
+
+ <p>
+   <label for="review">Review:</label>
+   <textarea id="review" v-model="review"></textarea>
+ </p>
+
+ <p>
+   <label for="rating">Rating:</label>
+   <select id="rating" v-model.number="rating">
+     <option>5</option>
+     <option>4</option>
+     <option>3</option>
+     <option>2</option>
+     <option>1</option>
+   </select>
+ </p>
+
+ <p>
+   <input type="submit" value="Submit"> 
+ </p>
+
+</form>
+
        
        </div>
    </div>
@@ -67,26 +98,23 @@ Vue.component('product', {
                     variantId: 2235,
                     variantColor: 'blue',
                     variantImage: "./assets/vmSocks-blue-onWhite.jpg",
-                    variantQuantity: 30
+                    variantQuantity: 0
                 }
             ],
-
+            reviews: [],
         }
     },
     methods: {
         addToCart() {
-            this.$emit('add-to-cart',
-            this.variants[this.selectedVariant].variantId);
-        },
-        removeToCart() {
-            this.$emit('remove-to-cart',
-                this.variants[this.selectedVariant].variantId);
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId);
         },
         updateProduct(index) {
             this.selectedVariant = index;
             console.log(index);
         },
-
+        addReview(productReview) {
+            this.reviews.push(productReview)
+        }
     },
     computed: {
         title() {
@@ -107,19 +135,44 @@ Vue.component('product', {
         }
     }
 })
-
 let app = new Vue({
     el: '#app',
     data: {
         premium: true,
-        cart: [],
+        cart: []
     },
     methods: {
         updateCart(id) {
             this.cart.push(id);
-        },
-        removeFromCart(id) {
-            this.cart.pop();
         }
     }
 })
+Vue.component('product-review', {
+    template: `
+   <input v-model="name">
+ `,
+    data() {
+        return {
+            name: null,
+            review: null,
+            rating: null,
+        }
+    },
+    methods:{
+        onSubmit() {
+            let productReview = {
+                name: this.name,
+                review: this.review,
+                rating: this.rating
+            }
+            this.$emit('review-submitted', productReview)
+            this.name = null
+            this.review = null
+            this.rating = null
+        },
+
+
+    }
+})
+
+
