@@ -1,5 +1,10 @@
+@font-face {
+    font-family: "Tahoma";
+    src: url("../fonts/ofont.ru_Tahoma.ttf");
+}
+
 body {
-    font-family: tahoma;
+    font-family: Tahoma;
     color:#282828;
     margin: 0px;
 }
